@@ -36,11 +36,14 @@
                     </div>
                     <div class="flex my-2 items-center">
                         <span class="label">旋转</span>
-                        <ProNumberInput size="small" class="mx-1" :min="-100" :max="100" v-model="state.rotation.x">
+                        <ProNumberInput size="small" class="mx-1" :step="1" type="angle" :min="-360" :max="360"
+                            v-model="state.rotation.x">
                         </ProNumberInput>
-                        <ProNumberInput size="small" class="mx-1" :min="-100" :max="100" v-model="state.rotation.y">
+                        <ProNumberInput size="small" class="mx-1" :step="1" type="angle" :min="-360" :max="360"
+                            v-model="state.rotation.y">
                         </ProNumberInput>
-                        <ProNumberInput size="small" class="mx-1" :min="-100" :max="100" v-model="state.rotation.z">
+                        <ProNumberInput size="small" class="mx-1" :step="1" type="angle" :min="-360" :max="360"
+                            v-model="state.rotation.z">
                         </ProNumberInput>
                     </div>
                     <div class="flex my-2 items-center">
@@ -141,7 +144,7 @@ let state = ref({
     triangleCount: 0,
     position: new THREE.Vector3(0, 0, 0),
     scale: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Euler(0, 0, 0),
+    rotation: { x: 0, y: 0, z: 0 },
     side: "",
     blending: "",
     opacity: 1,
@@ -215,8 +218,10 @@ const setStateByModel = (model: THREE.Mesh) => {
     state.value.triangleCount = Math.floor(state.value.vertexCount / 3 || 0);
     state.value.position = model.position.clone();
     state.value.scale = model.scale.clone();
-    state.value.rotation = model.rotation.clone();
 
+    // 旋转弧度转角度。
+    let rotation = model.rotation.clone();
+    state.value.rotation = { x: rotation.x * 180 / Math.PI, y: rotation.y * 180 / Math.PI, z: rotation.z * 180 / Math.PI };
 
     if (model.material) {
         Object.keys(materialKey).forEach(async (key) => {
@@ -251,7 +256,7 @@ const setModelByConfig = () => {
             let { x: sx, y: sy, z: sz } = state.value.scale;
             let { x: rx, y: ry, z: rz } = state.value.rotation;
             v.position.set(x, y, z);
-            v.rotation.set(rx, ry, rz);
+            v.rotation.set(rx * Math.PI / 180, ry * Math.PI / 180, rz * Math.PI / 180);
             v.scale.set(sx, sy, sz);
 
             if (v.material) {
