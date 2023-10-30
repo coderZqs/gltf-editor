@@ -1,18 +1,44 @@
-# Vue 3 + TypeScript + Vite
+# glTF 编辑器
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+#### 该项目是一款简易版的glTF编辑器，拥有上传、编辑模型材质、位移、旋转等与下载模型功能。
 
-## Recommended IDE Setup
+## 技术栈
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- 前端框架：Vue3 + pinia
+- 3D框架：threeJS
+- UI框架：ant-design-vue
 
-## Type Support For `.vue` Imports in TS
+## 编辑功能支持
++ [x] 位移
++ [x] 旋转
++ [x] 缩放
++ [x] 颜色
++ [x] 粗糙度
++ [x] 金属度
++ [x] 贴图
++ [x] 自发光贴图
++ [x] 透明贴图
++ [x] 凹凸贴图
++ [x] 法线贴图
++ [x] 位移贴图
++ [x] 粗糙贴图
++ [x] 金属贴图
++ [x] 面
++ [x] 混合模式
++ [x] 透明度
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## 安装
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+### 安装依赖
+```
+npm install
+```
+### 本地运行
+```
+npm run dev
+```
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### 打包
+```
+npm run build
+```
