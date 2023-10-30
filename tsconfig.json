@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["webpack-env", "node"],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "src/views/home/hooks/bg.js",
+    "src/views/home/hooks/bg.js",
+    "auto-imports.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

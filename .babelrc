@@ -1,0 +1,13 @@
+{
+  "presets": ["es2015", "stage-0"],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "ant-design-vue",
+        "libraryDirectory": "es",
+        "style": true // style: true 时加载的是less文件
+      }
+    ]
+  ]
+}
