@@ -52,10 +52,16 @@ const handleChange = async (info) => {
       let model = e.scene.children[0];
       Scene.model = model;
       Index.current = model;
-
-      console.log(model)
       model.position.set(0, 0, 0);
       Scene.scene!.add(model);
+
+      model.traverse((v) => {
+        if (v.isMesh) {
+          v.material.transparent = true;
+          v.material.opacity = 1;
+        }
+      })
+
       Index.tree = { uuid: model.uuid, key: model.uuid, title: model.name, children: [] };
       Index.getTree(model, Index.tree!.children);
       nextTick(() => {

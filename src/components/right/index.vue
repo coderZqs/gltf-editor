@@ -36,11 +36,14 @@
                     </div>
                     <div class="flex my-2 items-center">
                         <span class="label">旋转</span>
-                        <ProNumberInput size="small" class="mx-1" :min="-100" :max="100" v-model="state.rotation.x">
+                        <ProNumberInput size="small" class="mx-1" :step="1" type="angle" :min="-360" :max="360"
+                            v-model="state.rotation.x">
                         </ProNumberInput>
-                        <ProNumberInput size="small" class="mx-1" :min="-100" :max="100" v-model="state.rotation.y">
+                        <ProNumberInput size="small" class="mx-1" :step="1" type="angle" :min="-360" :max="360"
+                            v-model="state.rotation.y">
                         </ProNumberInput>
-                        <ProNumberInput size="small" class="mx-1" :min="-100" :max="100" v-model="state.rotation.z">
+                        <ProNumberInput size="small" class="mx-1" :step="1" type="angle" :min="-360" :max="360"
+                            v-model="state.rotation.z">
                         </ProNumberInput>
                     </div>
                     <div class="flex my-2 items-center">
@@ -71,10 +74,10 @@
                     <span class="label">贴图</span>
                     <TextureEditor type="map" v-model="state.map"></TextureEditor>
                 </div>
-                <div class="flex my-4 items-center">
+                <!-- <div class="flex my-4 items-center">
                     <span class="label">顶点颜色</span>
                     <a-checkbox v-model:checked="state.vertexColors"></a-checkbox>
-                </div>
+                </div> -->
                 <div class="flex my-4 items-center">
                     <span class="label">自发光贴图</span>
                     <TextureEditor type="emissiveMap" v-model="state.emissiveMap"></TextureEditor>
@@ -91,7 +94,7 @@
                     <span class="label">法线贴图</span>
                     <TextureEditor type="normalMap" v-model="state.normalMap"></TextureEditor>
                 </div>
-                <div class="flex my-4 items-center">
+                <div class="flex my-84 items-center">
                     <span class="label">位移贴图</span>
                     <TextureEditor type="displacementMap" v-model="state.displacementMap"></TextureEditor>
                 </div>
@@ -121,19 +124,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, Ref } from "vue";
 import IndexStore from "../../stores/index";
 import SceneStore from "../../stores/three";
 import * as THREE from "three";
 import TextureEditor from "../TextureEditor/index.vue";
 import ProNumberInput from "../ProNumberInput/index.vue";
 import { Collapse as ACollapse, CollapsePanel as ACollapsePanel, Select as ASelect, Input as AInput, Checkbox as ACheckbox } from "ant-design-vue"
+import { Config } from "@/types/index"
 
 let Index = IndexStore();
 let Scene = SceneStore();
 
 // 配置
-let state = ref({
+let state: Ref<Config> = ref({
     type: "",
     name: "",
     vertexCount: 0,
@@ -141,7 +145,7 @@ let state = ref({
     triangleCount: 0,
     position: new THREE.Vector3(0, 0, 0),
     scale: new THREE.Vector3(0, 0, 0),
-    rotation: new THREE.Euler(0, 0, 0),
+    rotation: { x: 0, y: 0, z: 0 },
     side: "",
     blending: "",
     opacity: 1,
@@ -215,8 +219,10 @@ const setStateByModel = (model: THREE.Mesh) => {
     state.value.triangleCount = Math.floor(state.value.vertexCount / 3 || 0);
     state.value.position = model.position.clone();
     state.value.scale = model.scale.clone();
-    state.value.rotation = model.rotation.clone();
 
+    // 旋转弧度转角度。
+    let rotation = model.rotation.clone();
+    state.value.rotation = { x: rotation.x * 180 / Math.PI, y: rotation.y * 180 / Math.PI, z: rotation.z * 180 / Math.PI };
 
     if (model.material) {
         Object.keys(materialKey).forEach(async (key) => {
@@ -251,7 +257,7 @@ const setModelByConfig = () => {
             let { x: sx, y: sy, z: sz } = state.value.scale;
             let { x: rx, y: ry, z: rz } = state.value.rotation;
             v.position.set(x, y, z);
-            v.rotation.set(rx, ry, rz);
+            v.rotation.set(rx * Math.PI / 180, ry * Math.PI / 180, rz * Math.PI / 180);
             v.scale.set(sx, sy, sz);
 
             if (v.material) {
