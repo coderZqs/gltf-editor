@@ -21,4 +21,29 @@ type Tree = {
   children: Tree[];
 };
 
-export type { Mesh, Tree };
+type Config = {
+  type: string;
+  name: string;
+  vertexCount: number;
+  color: THREE.Color;
+  triangleCount: number;
+  position: THREE.Vector3;
+  scale: THREE.Vector3;
+  rotation: { x: number; y: number; z: number };
+  side: string;
+  blending: string;
+  opacity: number;
+  roughness: number;
+  metalness: number;
+  map: string;
+  emissiveMap: string;
+  vertexColors: boolean;
+  alphaMap: string;
+  bumpMap: string;
+  normalMap: string;
+  displacementMap: string;
+  roughnessMap: string;
+  metalnessMap: string;
+};
+
+export type { Mesh, Tree, Config };

@@ -74,10 +74,10 @@
                     <span class="label">贴图</span>
                     <TextureEditor type="map" v-model="state.map"></TextureEditor>
                 </div>
-                <div class="flex my-4 items-center">
+                <!-- <div class="flex my-4 items-center">
                     <span class="label">顶点颜色</span>
                     <a-checkbox v-model:checked="state.vertexColors"></a-checkbox>
-                </div>
+                </div> -->
                 <div class="flex my-4 items-center">
                     <span class="label">自发光贴图</span>
                     <TextureEditor type="emissiveMap" v-model="state.emissiveMap"></TextureEditor>
@@ -94,7 +94,7 @@
                     <span class="label">法线贴图</span>
                     <TextureEditor type="normalMap" v-model="state.normalMap"></TextureEditor>
                 </div>
-                <div class="flex my-4 items-center">
+                <div class="flex my-84 items-center">
                     <span class="label">位移贴图</span>
                     <TextureEditor type="displacementMap" v-model="state.displacementMap"></TextureEditor>
                 </div>
@@ -124,19 +124,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, Ref } from "vue";
 import IndexStore from "../../stores/index";
 import SceneStore from "../../stores/three";
 import * as THREE from "three";
 import TextureEditor from "../TextureEditor/index.vue";
 import ProNumberInput from "../ProNumberInput/index.vue";
 import { Collapse as ACollapse, CollapsePanel as ACollapsePanel, Select as ASelect, Input as AInput, Checkbox as ACheckbox } from "ant-design-vue"
+import { Config } from "@/types/index"
 
 let Index = IndexStore();
 let Scene = SceneStore();
 
 // 配置
-let state = ref({
+let state: Ref<Config> = ref({
     type: "",
     name: "",
     vertexCount: 0,
@@ -243,7 +244,7 @@ const setStateByModel = (model: THREE.Mesh) => {
  * 通过配置设置模型
  */
 
-watch(() => state.value, (val) => { setModelByConfig(); }, { deep: true });
+watch(() => state.value, (val) => { setModelByConfig(); });
 
 /**
  * 通过配置设置模型

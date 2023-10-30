@@ -73,7 +73,7 @@ $headerHeight: 48px;
 .left,
 .right {
   background: black;
-  width: 360px;
+  width: 320px;
   height: calc(100vh - $headerHeight);
   overflow-y: hidden;
   overflow-x: hidden;
