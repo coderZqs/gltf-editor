@@ -244,7 +244,7 @@ const setStateByModel = (model: THREE.Mesh) => {
  * 通过配置设置模型
  */
 
-watch(() => state.value, (val) => { setModelByConfig(); });
+watch(() => state.value, (val) => { setModelByConfig(); }, { deep: true });
 
 /**
  * 通过配置设置模型
