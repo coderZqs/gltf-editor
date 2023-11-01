@@ -3,7 +3,7 @@
         <a-checkbox class="mr-2" v-model:checked="isUse" :disabled="!modelValue" @change="changeUse"></a-checkbox>
         <div class="upload-wrapper"
             :style="{ background: modelValue ? `url(${modelValue})` : 'white', backgroundSize: 'cover' }">
-            <input type="file" @change="uploadFile">
+            <input type="file" accept="image/*" @change="uploadFile">
         </div>
         <DownloadOutlined class="ml-2" v-if="modelValue" @click="download" />
     </div>

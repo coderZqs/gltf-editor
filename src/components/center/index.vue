@@ -2,8 +2,9 @@
   <div class="scene flex-1" ref="canvasWrapper" v-show="state.gltfUploaded"></div>
   <div class="upload-wrapper flex justify-center items-center" v-show="!state.gltfUploaded">
     <a-spin :spinning="state.isLoading">
-      <a-upload-dragger name="file" :multiple="true" action="http://www.hiwindy.cn/life_photo/common/upload"
-        @drop="handleDrop" @change="handleChange" style="width: 600px">
+      <a-upload-dragger :beforeUpload="beforeUpload" name="file" :multiple="true"
+        action="http://www.hiwindy.cn/life_photo/common/upload" @drop="handleDrop" @change="handleChange"
+        style="width: 600px">
         <p class="ant-upload-drag-icon">
           <inbox-outlined></inbox-outlined>
         </p>
@@ -14,7 +15,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { UploadDragger as AUploadDragger, Spin as ASpin } from 'ant-design-vue';
+import { UploadDragger as AUploadDragger, Spin as ASpin, message } from 'ant-design-vue';
 import { ref, reactive, nextTick, defineEmits } from "vue";
 import threeStore from "../../stores/three";
 import IndexStore from "../../stores/index";
@@ -35,6 +36,10 @@ const handleChange = async (info) => {
   const status = info.file.status;
   if (status === "uploading") {
     state.isLoading = true;
+  }
+
+  if (!status) {
+    return message.error('请上传gltf与glb文件')
   }
 
   if (status === "done") {
@@ -71,6 +76,17 @@ const handleChange = async (info) => {
   }
 };
 
+const beforeUpload = file => {
+  return new Promise((resolve, reject) => {
+    if (['gltf', 'glb'].includes(file.name.split('.')[1])) {
+      resolve()
+    } else {
+      reject('error')
+    }
+
+  });
+};
+
 /**
  * 拖拽上传
  */
@@ -87,5 +103,9 @@ const handleDrop = (e: DragEvent) => { };
   background: black;
   height: 100vh;
   flex: 1;
+}
+
+::v-deep .ant-upload-list {
+  display: none;
 }
 </style>
