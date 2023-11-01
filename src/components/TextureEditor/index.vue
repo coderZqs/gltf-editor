@@ -27,7 +27,7 @@ let props = defineProps({
 
 let emits = defineEmits(['update:modelValue'])
 
-let value = computed({
+let textureUrl = computed({
     set: (val) => {
         emits("update:modelValue", val);
     },
@@ -38,7 +38,7 @@ let value = computed({
 })
 
 const download = () => {
-    downloadFile(value.value);
+    downloadFile(textureUrl.value);
 }
 
 const downloadFile = (url: string, filename = 'texture'): void => {
@@ -54,7 +54,7 @@ let isUse = ref(true);
 
 const uploadFile = (e) => {
     let image = URL.createObjectURL(e.target.files[0])
-    value.value = image;
+    textureUrl.value = image;
 
     let texture = new THREE.TextureLoader();
     texture.load(image, (t) => {
@@ -82,7 +82,7 @@ const changeUse = (e) => {
             if (v.uuid === Index.current.uuid) {
                 v.material[props.type] = "";
                 v.material.needsUpdate = true;
-                value.value = ""
+                textureUrl.value = ""
             }
         });
     }

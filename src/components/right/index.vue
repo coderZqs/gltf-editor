@@ -222,7 +222,8 @@ const setStateByModel = (model: THREE.Mesh) => {
 
     // 旋转弧度转角度。
     let rotation = model.rotation.clone();
-    state.value.rotation = { x: rotation.x * 180 / Math.PI, y: rotation.y * 180 / Math.PI, z: rotation.z * 180 / Math.PI };
+    const degree2radians = (d) => d * 180 / Math.PI;
+    state.value.rotation = { x: degree2radians(rotation.x), y: degree2radians(rotation.y), z: degree2radians(rotation.z) };
 
     if (model.material) {
         Object.keys(materialKey).forEach(async (key) => {

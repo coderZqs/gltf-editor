@@ -7,8 +7,6 @@ import gsap from "gsap";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass.js";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
-import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 
 export default defineStore("three", () => {
   let camera: THREE.PerspectiveCamera = T.initCamera();
@@ -17,6 +15,35 @@ export default defineStore("three", () => {
   let model: Ref<THREE.Object3D> = ref({} as THREE.Object3D);
   let composer = {} as EffectComposer;
   let outlinePass = ref({} as OutlinePass);
+
+  const setOutLineEffect = (width, height) => {
+    composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+    outlinePass.value = new OutlinePass(
+      new THREE.Vector2(width, height),
+      scene,
+      camera
+    );
+
+    let params = {
+      edgeStrength: 10, // 边缘强度
+      edgeGlow: 1, // 边缘发光
+      edgeThickness: 4, // 边缘厚度
+      pulsePeriod: 5, // 脉冲周期
+      rotate: false,
+      usePatternTexture: false
+    };
+
+    outlinePass.value.edgeStrength = Number(params.edgeStrength);
+    outlinePass.value.edgeGlow = Number(params.edgeGlow);
+    outlinePass.value.edgeThickness = Number(params.edgeThickness);
+    outlinePass.value.pulsePeriod = Number(params.pulsePeriod);
+    outlinePass.value.visibleEdgeColor.set("#ffffff");
+    outlinePass.value.hiddenEdgeColor.set("#ffffff");
+
+    composer.addPass(toRaw(outlinePass.value));
+  };
 
   /**
    * 设置屏幕大小
@@ -39,33 +66,7 @@ export default defineStore("three", () => {
     if (renderer && camera && scene) {
       let { width, height } = setScreenSize(dom);
       setCameraToModelSide();
-
-      composer = new EffectComposer(renderer);
-      const renderPass = new RenderPass(scene, camera);
-      composer.addPass(renderPass);
-      outlinePass.value = new OutlinePass(
-        new THREE.Vector2(width, height),
-        scene,
-        camera
-      );
-
-      let params = {
-        edgeStrength: 10,
-        edgeGlow: 1,
-        edgeThickness: 4,
-        pulsePeriod: 5,
-        rotate: false,
-        usePatternTexture: false
-      };
-
-      outlinePass.value.edgeStrength = Number(params.edgeStrength);
-      outlinePass.value.edgeGlow = Number(params.edgeGlow);
-      outlinePass.value.edgeThickness = Number(params.edgeThickness);
-      outlinePass.value.pulsePeriod = Number(params.pulsePeriod);
-      outlinePass.value.visibleEdgeColor.set("#ffffff");
-      outlinePass.value.hiddenEdgeColor.set("#ffffff");
-
-      composer.addPass(toRaw(outlinePass.value));
+      setOutLineEffect(width, height);
 
       let controls = T.addOrbitControls(camera, renderer.domElement);
       T.appendCanvasToElement(dom, renderer.domElement);
@@ -79,7 +80,7 @@ export default defineStore("three", () => {
         requestAnimationFrame(animate);
         composer.render();
 
-        renderer.setClearColor(0x272822)
+        renderer.setClearColor(0x272822);
         // renderer!.render(scene!, camera!);
         controls.update();
       };
@@ -105,7 +106,7 @@ export default defineStore("three", () => {
         camera.lookAt(model.value.position);
       },
       onComplete: function () {
-        console.log(camera.position)
+        console.log(camera.position);
       }
     });
   };
