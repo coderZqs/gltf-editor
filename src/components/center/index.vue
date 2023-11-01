@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import { UploadDragger as AUploadDragger, Spin as ASpin, message } from 'ant-design-vue';
-import { ref, reactive, nextTick, defineEmits } from "vue";
+import { ref, reactive, nextTick, defineEmits, onMounted } from "vue";
 import threeStore from "../../stores/three";
 import IndexStore from "../../stores/index";
 import T from "@/utils/threeUtils";
@@ -27,6 +27,10 @@ let Index = IndexStore();
 const state = reactive({ isLoading: false, gltfUploaded: false });
 let canvasWrapper = ref(null);
 let emits = defineEmits(["uploadSuccess"]);
+
+onMounted(async () => {
+  loadModel('http://www.hiwindy.cn/life_photo//1698828345985.glb');
+})
 
 /**
  * 上传成功
@@ -46,35 +50,38 @@ const handleChange = async (info) => {
     let code = info.file.response.code;
     if (code === 200) {
       let fileUrl = "http://www.hiwindy.cn/life_photo/" + info.file.response.data.image;
-      let e = (await T.loadGLTF(fileUrl)) as any;
-
-      console.log(e)
-      state.isLoading = false;
-      state.gltfUploaded = true;
-      // 发送给父元素，用于控制左右两边菜单栏显隐。
-      emits("uploadSuccess", state.gltfUploaded);
-
-      let model = e.scene.children[0];
-      Scene.model = model;
-      Index.current = model;
-      model.position.set(0, 0, 0);
-      Scene.scene!.add(model);
-
-      model.traverse((v) => {
-        if (v.isMesh) {
-          v.material.transparent = true;
-          v.material.opacity = 1;
-        }
-      })
-
-      Index.tree = { uuid: model.uuid, key: model.uuid, title: model.name, children: [] };
-      Index.getTree(model, Index.tree!.children);
-      nextTick(() => {
-        Scene.initScreen(canvasWrapper.value);
-      });
+      loadModel(fileUrl);
     }
   }
 };
+
+const loadModel = async (fileUrl) => {
+  state.isLoading = true;
+  let e = (await T.loadGLTF(fileUrl)) as any;
+  state.isLoading = false;
+  state.gltfUploaded = true;
+  // 发送给父元素，用于控制左右两边菜单栏显隐。
+  emits("uploadSuccess", state.gltfUploaded);
+
+  let model = e.scene.children[0];
+  Scene.model = model;
+  Index.current = model;
+  model.position.set(0, 0, 0);
+  Scene.scene!.add(model);
+
+  model.traverse((v) => {
+    if (v.isMesh) {
+      v.material.transparent = true;
+      v.material.opacity = 1;
+    }
+  })
+
+  Index.tree = { uuid: model.uuid, key: model.uuid, title: model.name, children: [] };
+  Index.getTree(model, Index.tree!.children);
+  nextTick(() => {
+    Scene.initScreen(canvasWrapper.value);
+  });
+}
 
 const beforeUpload = file => {
   return new Promise((resolve, reject) => {
@@ -83,7 +90,6 @@ const beforeUpload = file => {
     } else {
       reject('error')
     }
-
   });
 };
 
