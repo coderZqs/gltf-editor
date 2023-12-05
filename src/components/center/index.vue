@@ -3,7 +3,7 @@
   <div class="upload-wrapper flex justify-center items-center" v-show="!state.gltfUploaded">
     <a-spin :spinning="state.isLoading">
       <a-upload-dragger :beforeUpload="beforeUpload" name="file" :multiple="true"
-        action="http://www.hiwindy.cn/life_photo/common/upload" @drop="handleDrop" @change="handleChange"
+        action="https://www.hiwindy.cn/life_photo/common/upload" @drop="handleDrop" @change="handleChange"
         style="width: 600px">
         <p class="ant-upload-drag-icon">
           <inbox-outlined></inbox-outlined>
@@ -29,7 +29,7 @@ let canvasWrapper = ref(null);
 let emits = defineEmits(["uploadSuccess"]);
 
 onMounted(async () => {
-  loadModel('http://www.hiwindy.cn/life_photo//1698828345985.glb');
+  loadModel('https://www.hiwindy.cn/life_photo//1698828345985.glb');
 })
 
 /**
@@ -49,7 +49,7 @@ const handleChange = async (info) => {
   if (status === "done") {
     let code = info.file.response.code;
     if (code === 200) {
-      let fileUrl = "http://www.hiwindy.cn/life_photo/" + info.file.response.data.image;
+      let fileUrl = "https://www.hiwindy.cn/life_photo/" + info.file.response.data.image;
       loadModel(fileUrl);
     }
   }

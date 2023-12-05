@@ -40,7 +40,7 @@ let isExportLoading = ref(false);
 let light = new THREE.AmbientLight(0xffffff, 1);
 Three.scene.add(light);
 
-let directLight = new THREE.DirectionalLight(0xFFFFFFF, 1);
+let directLight = new THREE.DirectionalLight(0xFF0000, 1);
 Three.scene.add(directLight);
 directLight.position.set(5, 5, -5);
 Three.camera.position.set(10, 10, 10);
